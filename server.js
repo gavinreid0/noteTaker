@@ -10,7 +10,7 @@ const writeFileAsync = util.promisify(fs.writeFile);
 
 // Created server
 const app = express();
-// Set port 
+// Defines port 
 const PORT = process.env.PORT || 8080;
 // Set use
 app.use(express.urlencoded({ extended: true }));
@@ -18,8 +18,31 @@ app.use(express.json());
 // Make the static files
 app.use(express.static("./Develop/public"));
 
-// Starting server
+// GET request
+app.get("/api/notes", function (req, res) {
+    readFileAsync("./Develop/db/db.json", "utf8").then(function (data) {
+        notes = [].concat(JSON.parse(data))
+        res.json(notes);
+    })
+});
+
+// POST 
+app.post("/api/notes", function (req, res) {
+    const note = req.body;
+    readFileAsync("./Develop/db/db.json", "utf8").then(function (data) {
+        const notes = [].concat(JSON.parse(data));
+        note.id = notes.length + 1
+        notes.push(note);
+        return notes
+    })
+        .then(function (notes) {
+            writeFileAsync("./Develop/db/db.json", JSON.stringify(notes))
+            res.json(note);
+        })
+});
+
+
+// Start server
 app.listen(PORT, function () {
-    console.log("App listening on PORT " + PORT);
     console.log(`Server listening on: http://localhost:${PORT}`);
 });
