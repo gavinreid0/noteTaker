@@ -25,8 +25,7 @@ app.get("/api/notes", function (req, res) {
         res.json(notes);
     })
 });
-
-// POST 
+// POST request
 app.post("/api/notes", function (req, res) {
     const note = req.body;
     readFileAsync("./Develop/db/db.json", "utf8").then(function (data) {
@@ -41,6 +40,16 @@ app.post("/api/notes", function (req, res) {
         })
 });
 
+// HTML routing 
+app.get("/notes", function (req, res) {
+    res.sendFile(path.join(__dirname, "./Develop/public/notes.html"));
+});
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, "./Develop/public/index.html"));
+});
+app.get("*", function (req, res) {
+    res.sendFile(path.join(__dirname, "./Develop/public/index.html"));
+});
 
 // Start server
 app.listen(PORT, function () {
